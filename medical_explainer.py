@@ -91,12 +91,12 @@ class explainer:
         for calibrated_classifier in self.calibrated_clf.calibrated_classifiers_:
             print('Kernel Explainer Iteration ' + str(i))
             if self.pipeline_clf == 'Neural_Network':
-                estimator = calibrated_classifier.base_estimator.named_steps['Neural_Network']
+                estimator = calibrated_classifier.estimator.named_steps['Neural_Network']
             else:
-                estimator = calibrated_classifier.base_estimator
+                estimator = calibrated_classifier.estimator
 
             explainer = shap.KernelExplainer(
-                calibrated_classifier.base_estimator.predict, self.X_train[:500].values)
+                calibrated_classifier.estimator.predict, self.X_train[:500].values)
             shap_values = explainer.shap_values(self.X_train.values, nsamples=500)
             # shap_values = explainer.shap_values(self.X_train[50:1000].values, nsamples=500)
 
@@ -119,7 +119,7 @@ class explainer:
         shap_expected_values_list = []
         for calibrated_classifier in self.calibrated_clf.calibrated_classifiers_:
             explainer = shap.TreeExplainer(
-                calibrated_classifier.base_estimator,
+                calibrated_classifier.estimator,
                 feature_perturbation = "tree_path_dependent")
             shap_values = explainer.shap_values(self.X_train)
             expected_value = explainer.expected_value
@@ -137,8 +137,8 @@ class explainer:
         shap_expected_values_list = []
         for calibrated_classifier in self.calibrated_clf.calibrated_classifiers_:
             if self.pipeline_clf == 'Log_Reg':
-                estimator = calibrated_classifier.base_estimator.named_steps['Log_Reg']
-                X_train = calibrated_classifier.base_estimator.named_steps['Scaler'].transform(self.X_train)
+                estimator = calibrated_classifier.estimator.named_steps['Log_Reg']
+                X_train = calibrated_classifier.estimator.named_steps['Scaler'].transform(self.X_train)
             else:
                 estimator = calibrated_classifier.base_estimator
                 X_train = self.X_train
