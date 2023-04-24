@@ -240,9 +240,9 @@ class explainer:
         beta_values_list = []
         intercept_values_list = []
         for calibrated_clf in self.calibrated_clf.calibrated_classifiers_:
-            beta_values = calibrated_clf.base_estimator.coef_[0]
+            beta_values = calibrated_clf.estimator.coef_[0]
             beta_values_list.append(beta_values)
-            intercept_values_list.append(calibrated_clf.base_estimator.intercept_[0])
+            intercept_values_list.append(calibrated_clf.estimator.intercept_[0])
 
         self.beta_values = np.array(beta_values_list).sum(axis=0) / len(beta_values_list)
         self.intercept_value = np.array(intercept_values_list).mean()
